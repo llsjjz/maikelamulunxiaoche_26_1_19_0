@@ -11,9 +11,10 @@
 #define Length 0.2f         // 车辆长度 (m)
 #define Wide 0.1f           // 车辆宽度 (m)
 #define Radius 0.05f        // 轮子半径 (m)
+#define Radius_1 0.05f        // 变形轮子半径 (m)
 
 // 全局变量
-vehicle_parameter vehicle_physics = {Length, Wide, Radius}; // 车辆物理参数
+vehicle_parameter vehicle_physics = {Length, Wide, Radius, Radius_1}; // 车辆物理参数
 static uint8_t uart_rx_buf[DMA_RX_BUF_SIZE] = {0};          // DMA接收缓冲区
 static UART_Cmd_t uart_cmd = {MOTION_STOP, 0.0f, 0};        // 解析后的串口指令
 
@@ -47,7 +48,7 @@ void My_UART_Cmd_Parse(void)
 
     // 3. 合法性校验
     if (uart_cmd.mode > MOTION_CCW) uart_cmd.mode = MOTION_STOP;
-    if (fabs(uart_cmd.speed) > 2.0f) uart_cmd.speed = 2.0f;        // 速度限制 2m/s
+    if (fabs(uart_cmd.speed) > 0.5f) uart_cmd.speed = 0.5f;        // 速度限制 0.5m/s
 
     // 4. 清空缓冲区，重新开启DMA接收
     memset(uart_rx_buf, 0, DMA_RX_BUF_SIZE);
@@ -80,6 +81,22 @@ static void Mecanum_Wheel_Speed_Calc(speed_parameter *speed, float aim_speed[4])
     aim_speed[YQ] = (Vy + Vx + omega * L) / (2 * 3.14159f * vehicle_physics.radius) * 60.0f;
     aim_speed[ZH] = (Vy + Vx - omega * L) / (2 * 3.14159f * vehicle_physics.radius) * 60.0f;
     aim_speed[YH] = (Vy - Vx + omega * L) / (2 * 3.14159f * vehicle_physics.radius) * 60.0f;
+}
+
+/**
+ * @brief 变形轮速度解算（核心优化）
+ * @param speed 运动参数(Vy)
+ * @param aim_speed 输出4个轮子的目标转速 (rpm)
+ */
+static void Wheel_Speed_Calc(speed_parameter *speed, float aim_speed[4])
+{
+    float Vy = speed->Vy;
+
+    // 转速公式：n (rpm) = (线速度 m/s) / (2πr m/转) * 60 (s/min)
+    aim_speed[ZQ] = Vy / (2 * 3.14159f * vehicle_physics.radius_1) * 60.0f;
+    aim_speed[YQ] = Vy / (2 * 3.14159f * vehicle_physics.radius_1) * 60.0f;
+    aim_speed[ZH] = Vy / (2 * 3.14159f * vehicle_physics.radius_1) * 60.0f;
+    aim_speed[YH] = Vy / (2 * 3.14159f * vehicle_physics.radius_1) * 60.0f;
 }
 
 void My_Init(void)// 初始化
@@ -148,7 +165,8 @@ void My_run(void)// 主逻辑，建议放在10ms定时器中断
     }
 
     // 2. 麦克纳姆轮速度解算
-    Mecanum_Wheel_Speed_Calc(&vehicle_speed, aimspeed);
+    if(cmd.sg_state==0)Mecanum_Wheel_Speed_Calc(&vehicle_speed, aimspeed);
+	else if(cmd.sg_state==1)Wheel_Speed_Calc(&vehicle_speed, aimspeed);
 
     // 3. 速度限幅（防止超过电机最大转速）
     float max_speed = 0;

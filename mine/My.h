@@ -47,6 +47,7 @@ typedef struct{
     double length; // 长度
     double wide;   // 宽度
     double radius; // 轮子半径
+	double radius_1;//变形轮子半径
 }vehicle_parameter;
 
 //*****************************************函数************************************************************//

@@ -7,9 +7,9 @@ siquxiaoche_1_14_0/main.o: ..\Core\Src\main.c ..\Core\Inc\main.h \
   ..\Drivers\CMSIS\Device\ST\STM32F1xx\Include\stm32f103xe.h \
   ..\Drivers\CMSIS\Include\core_cm3.h \
   E:\keil\ARM\ARMCLANG\include\stdint.h \
-  E:\stm32\project\siquxiaoche_1_14_0\Drivers\CMSIS\Include\cmsis_version.h \
-  E:\stm32\project\siquxiaoche_1_14_0\Drivers\CMSIS\Include\cmsis_compiler.h \
-  E:\stm32\project\siquxiaoche_1_14_0\Drivers\CMSIS\Include\cmsis_armclang.h \
+  E:\stm32\project\siquxiaoche_1_14_1\Drivers\CMSIS\Include\cmsis_version.h \
+  E:\stm32\project\siquxiaoche_1_14_1\Drivers\CMSIS\Include\cmsis_compiler.h \
+  E:\stm32\project\siquxiaoche_1_14_1\Drivers\CMSIS\Include\cmsis_armclang.h \
   E:\keil\ARM\ARMCLANG\include\arm_compat.h \
   E:\keil\ARM\ARMCLANG\include\arm_acle.h \
   ..\Drivers\CMSIS\Device\ST\STM32F1xx\Include\system_stm32f1xx.h \

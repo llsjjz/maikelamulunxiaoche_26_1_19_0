@@ -41,7 +41,7 @@ static const Motor_Param_t motor_default_config[MOTOR_TOTAL_NUM] = {
         .gpio_a = {GPIOA, GPIO_PIN_2},
         .gpio_b = {GPIOA, GPIO_PIN_3},
         .enc_tim = &htim5,
-        .enc_per_round = 138U
+        .enc_per_round = 425U
     }
 };
 

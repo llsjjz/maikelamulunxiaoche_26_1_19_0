@@ -101,7 +101,6 @@ int main(void)
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
 My_Init();                  // 初始化
-My_UART_DMA_Init();         // UART DMA初始化
   /* USER CODE END 2 */
 
   /* Infinite loop */
